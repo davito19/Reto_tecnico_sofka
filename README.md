@@ -20,7 +20,7 @@ python -m pip install --upgrade pip
 python -m pip install Pillow
 python -m pip install tk
 
-puede ejecutar el programa desde cualquier IDE que soporte python
+puede ejecutar el programa desde cualquier IDE que soporte python o desde la consola así:
 
 python .\main.py
 
