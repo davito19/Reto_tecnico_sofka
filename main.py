@@ -1,17 +1,21 @@
 import tkinter as tk
+from typing import Text
 from PIL import Image, ImageTk
 from operator import itemgetter
+from random import randint
 import json
 
 class game:
     def __init__(self):
         self.scores = score("Scores.json")
+        self.player = "IA"
+        self.question =  question("nivel1.json")
         self.root = tk.Tk()
         self.__configRoot()
         self.__configMenu()
-        #self.__configFramePrincipal()
+        self.__configFramePrincipal()
         #self.__configFrameScores()
-        self.__configFrameGame()
+        #self.__configFrameGame()
         self.root.mainloop()
 
     def __configRoot(self):
@@ -45,13 +49,21 @@ class game:
         self.__widgetFrameGame()  
 
     def __widgetFrameGame(self):
+        self.__labelPlayer()
         self.__labelQuestion()
+        self.__buttonResponse()
 
+    def __labelPlayer(self):
+        self.labelPlayer = tk.Label(self.frameGame, text=self.player, font=('comic sans MS', -20)).place(x=20, y=30)
 
     def __labelQuestion(self):
-        pass
+        self.labelQuestion = tk.Label(self.frameGame, text="1. hola como tas?", font=('comic sans MS', -20)).place(x=20, y=80)
 
-
+    def __buttonResponse(self):
+        self.buttonResponse1 = tk.Button(self.frameGame, text="opcion A", font=('comic sans MS', -20)).place(x=20, y= 150)
+        self.buttonResponse2 = tk.Button(self.frameGame, text="opcion B", font=('comic sans MS', -20)).place(x=20, y= 220)
+        self.buttonResponse3 = tk.Button(self.frameGame, text="opcion C", font=('comic sans MS', -20)).place(x=120, y= 150)
+        self.buttonResponse4 = tk.Button(self.frameGame, text="opcion D", font=('comic sans MS', -20)).place(x=120, y= 220)
 
 
 
@@ -91,7 +103,7 @@ class game:
 
     def __buttonPlay(self):
         self.imagePlay = tk.PhotoImage(file="imagenes\\play.png")
-        self.buttonPlay = tk.Button(self.framePrincipal, text = 'Play!', image=self.imagePlay, relief="flat")
+        self.buttonPlay = tk.Button(self.framePrincipal, text = 'Play!', image=self.imagePlay, relief="flat", command=self.__configFrameGame)
         self.buttonPlay.place(x=180, y=140)
 
     def __buttonScore(self):
@@ -108,8 +120,45 @@ class game:
         self.labelDesign = tk.Label(self.framePrincipal, text="desing by: Davito", font=('comic sans MS', -10), fg="orange")
         self.labelDesign.place(x=395, y=360)
 
+            
 #--------------------------------------------------------------------------------------------------#
 
+class question:
+    def __init__(self, banco_preguntas):
+        self.banco = banco_preguntas
+        self.pregunta = None
+        self.__takeAQuestion()
+
+    def __takeAQuestion(self):
+        preguntas = json.load(open(self.banco))
+        index = randint(0,4)
+        keys = list(preguntas)
+        self.pregunta = (keys[index],preguntas[keys[index]])
+
+    def getQuestionAnswer(self):
+        return self.pregunta
+
+    def getOption(self):
+        return self.pregunta[1][1]
+
+    def getCorrectOption(self):
+        return self.pregunta[1][0]
+    
+    def getQuestion(self):
+        return self.pregunta[0]
+
+class player():
+    def __init__(self):
+        root=tk.Tk()
+        self.name=tk.StringVar()
+        tk.Label(root, text='enter your name').pack()
+        tk.Entry(root, textvariable=self.name).pack()
+        tk.Button(root, text='Enter', command=root.destroy).pack()
+        root.mainloop()
+
+    def getName(self):
+        return self.name.get()
+    
 class score:
     def __init__(self, path : str):
         self.__path = path
@@ -131,7 +180,14 @@ class score:
     def getScores(self):
         score_sort = sorted(self.__Scores.items(), key=itemgetter(1), reverse=True)
         return score_sort
-        
+
+
 
 if __name__=='__main__':
     game()
+    #print(player().getName())
+    # b = question("noobcategory.json")
+    # print(b.getQuestionAnswer())
+    # print(b.getQuestion())
+    # print(b.getOption())
+    # print(b.getCorrectOption())
