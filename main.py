@@ -5,11 +5,10 @@ from operator import itemgetter
 from random import randint
 import json
 
+niveles = ("nivel1.json","nivel2.json","nivel3.json","nivel4.json","nivel5.json")
+
 class game:
     def __init__(self):
-        self.scores = score("Scores.json")
-        self.player = "IA"
-        self.question =  question("nivel1.json")
         self.root = tk.Tk()
         self.__configRoot()
         self.__configMenu()
@@ -18,6 +17,18 @@ class game:
         #self.__configFrameGame()
         self.root.mainloop()
 
+    def __configGame(self):
+        self.ronda = 0
+        self.scores = score("Scores.json")
+        self.player = "IA"
+        self.__question()
+
+    def __question(self):
+        self.question =  question(niveles[self.ronda])
+        print(self.question.getQuestion())
+        self.questionRound = self.question.getQuestion()
+        self.options = self.question.getOption()
+        
     def __configRoot(self):
         self.root.title("Knowledge")
         self.root.iconbitmap("imagenes\\interrogacion.ico")
@@ -44,6 +55,7 @@ class game:
         self.__widgetFrameScores()
 
     def __configFrameGame(self):
+        self.__configGame()
         self.frameGame = tk.Frame(self.root,  width=480, height= 380)
         self.frameGame.grid(row=0, column=0)
         self.__widgetFrameGame()  
@@ -57,15 +69,36 @@ class game:
         self.labelPlayer = tk.Label(self.frameGame, text=self.player, font=('comic sans MS', -20)).place(x=20, y=30)
 
     def __labelQuestion(self):
-        self.labelQuestion = tk.Label(self.frameGame, text="1. hola como tas?", font=('comic sans MS', -20)).place(x=20, y=80)
+        self.labelQuestion = tk.Label(self.frameGame, text=self.questionRound, font=('comic sans MS', -20))
+        self.labelQuestion.place(x=20, y=80)
 
     def __buttonResponse(self):
-        self.buttonResponse1 = tk.Button(self.frameGame, text="opcion A", font=('comic sans MS', -20)).place(x=20, y= 150)
-        self.buttonResponse2 = tk.Button(self.frameGame, text="opcion B", font=('comic sans MS', -20)).place(x=20, y= 220)
-        self.buttonResponse3 = tk.Button(self.frameGame, text="opcion C", font=('comic sans MS', -20)).place(x=120, y= 150)
-        self.buttonResponse4 = tk.Button(self.frameGame, text="opcion D", font=('comic sans MS', -20)).place(x=120, y= 220)
+        self.buttonResponse1 = tk.Button(self.frameGame, text=self.options[0], font=('comic sans MS', -20), command=lambda:self.__response(self.options[0]))
+        self.buttonResponse1.place(x=20, y= 150)
+        self.buttonResponse2 = tk.Button(self.frameGame, text=self.options[1], font=('comic sans MS', -20), command=lambda:self.__response(self.options[1]))
+        self.buttonResponse2.place(x=20, y= 220)
+        self.buttonResponse3 = tk.Button(self.frameGame, text=self.options[2], font=('comic sans MS', -20), command=lambda:self.__response(self.options[2])) 
+        self.buttonResponse3.place(x=180, y= 150)
+        self.buttonResponse4 = tk.Button(self.frameGame, text=self.options[3], font=('comic sans MS', -20), command=lambda:self.__response(self.options[3])) 
+        self.buttonResponse4.place(x=180, y= 220)
+
+    def __response(self, response):
+        print(response)
+        if response == self.question.getCorrectOption():
+            self.__nextRound()
+        else:
+            self.frameGame.destroy()
 
 
+    def __nextRound(self):
+        self.ronda+=1
+        if self.ronda<5:
+            self.__question()
+            self.labelQuestion.config(text=self.questionRound)
+            self.buttonResponse1.config(text=self.options[0])
+            self.buttonResponse2.config(text=self.options[1])
+            self.buttonResponse3.config(text=self.options[2])
+            self.buttonResponse4.config(text=self.options[3])
 
     def __widgetFrameScores(self):
         self.__labelScore()
