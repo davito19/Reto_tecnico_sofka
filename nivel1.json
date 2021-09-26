@@ -1,0 +1,7 @@
+{
+    "Cual es la capital de Antioquia": ["Medellin",["Medellin","Cali","Bogota","Cartagena"]],
+    "Cuanto es 2 + 2 ": ["4", ["3", "4", "6", "1"]],
+    "Cuales son las 3 primeras letras del Abcedario" : ["abc",["ghf", "dar", "abc", "xyz"]],
+    "Si tengo 2 peras y boto una cuantas me quedan" : ["1",["1","2","0","3"]],
+    "Como se denomina a las personas nacidas en colombia": ["colombianos", ["colombianos", "gente", "mexicano", "peruano"]]
+}

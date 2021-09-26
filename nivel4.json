@@ -1,0 +1,7 @@
+{
+    "Python es un lenguaje" : ["interpretado", ["interpretado","copilado","callado","cool"]],
+    "La lava es": ["roca Fundida", ["roca Fundida", "fuego", "agua caliente", "sangre"]],
+    "cual es la distancia a la luna" : ["384400km", ["300km", "32123km", "384400km", "3km"]],
+    "El periodo lunar es de" : ["29dias", ["29dias", "31dias", "14dias", "24dias"]],
+    "Cuantos paises tiene LATAM" : ["20", ["24", "32", "20", "46"]]
+}
