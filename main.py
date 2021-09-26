@@ -9,23 +9,22 @@ niveles = ("nivel1.json","nivel2.json","nivel3.json","nivel4.json","nivel5.json"
 
 class game:
     def __init__(self):
+        self.scores = score("Scores.json")
         self.root = tk.Tk()
         self.__configRoot()
         self.__configMenu()
         self.__configFramePrincipal()
-        #self.__configFrameScores()
-        #self.__configFrameGame()
         self.root.mainloop()
 
     def __configGame(self):
         self.ronda = 0
-        self.scores = score("Scores.json")
+        self.scorePlayer = 0
         self.player = "IA"
         self.__question()
 
     def __question(self):
         self.question =  question(niveles[self.ronda])
-        print(self.question.getQuestion())
+        #print(self.question.getQuestion())
         self.questionRound = self.question.getQuestion()
         self.options = self.question.getOption()
         
@@ -83,22 +82,34 @@ class game:
         self.buttonResponse4.place(x=180, y= 220)
 
     def __response(self, response):
-        print(response)
+        #print(response)
         if response == self.question.getCorrectOption():
             self.__nextRound()
         else:
+            print(self.scorePlayer)
+            self.scores.addScore(self.player, self.scorePlayer)
+            self.scores.writeScore()
             self.frameGame.destroy()
 
 
     def __nextRound(self):
         self.ronda+=1
         if self.ronda<5:
+            self.scorePlayer += 10**self.ronda
             self.__question()
             self.labelQuestion.config(text=self.questionRound)
             self.buttonResponse1.config(text=self.options[0])
             self.buttonResponse2.config(text=self.options[1])
             self.buttonResponse3.config(text=self.options[2])
             self.buttonResponse4.config(text=self.options[3])
+        else:
+            print("Winner!!!")
+            self.scorePlayer += 1000000
+            print(self.scorePlayer)
+            self.scores.addScore(self.player, self.scorePlayer)
+            self.scores.writeScore()
+            self.frameGame.destroy()
+            
 
     def __widgetFrameScores(self):
         self.__labelScore()
@@ -197,14 +208,11 @@ class score:
         self.__path = path
         self.__Scores = json.load(open(path))
 
-    # def getPlayers(self):
-    #     return list(self.__Scores)
-
-    # def getScoresOnly(self):
-    #     return list(self.__Scores.values())
-
     def addScore(self, id, score):
-        self.__Scores[id] = score
+        if id in self.__Scores:
+            self.__Scores[id] = score if score>self.__Scores[id] else self.__Scores[id]
+        else:
+             self.__Scores[id] = score
 
     def writeScore(self):
         with open(self.__path, 'w') as file:
